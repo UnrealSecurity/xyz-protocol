@@ -4,36 +4,39 @@ using System.Text;
 using System.IO;
 using System.IO.Compression;
 
-class XyzUtils
+namespace XyzSharp
 {
-    public static byte[] Deflate(byte[] bytes)
+    class XyzUtils
     {
-        using (MemoryStream streamUncompressed = new MemoryStream(bytes))
+        public static byte[] Deflate(byte[] bytes)
         {
-            using (MemoryStream streamCompressed = new MemoryStream())
+            using (MemoryStream streamUncompressed = new MemoryStream(bytes))
             {
-                using (DeflateStream compressionStream = new DeflateStream(streamCompressed, CompressionMode.Compress))
+                using (MemoryStream streamCompressed = new MemoryStream())
                 {
-                    streamUncompressed.CopyTo(compressionStream);
-                }
+                    using (DeflateStream compressionStream = new DeflateStream(streamCompressed, CompressionMode.Compress))
+                    {
+                        streamUncompressed.CopyTo(compressionStream);
+                    }
 
-                return streamCompressed.ToArray();
+                    return streamCompressed.ToArray();
+                }
             }
         }
-    }
 
-    public static byte[] Inflate(byte[] bytes)
-    {
-        using (MemoryStream streamCompressed = new MemoryStream(bytes))
+        public static byte[] Inflate(byte[] bytes)
         {
-            using (MemoryStream streamDecompressed = new MemoryStream())
+            using (MemoryStream streamCompressed = new MemoryStream(bytes))
             {
-                using (DeflateStream decompressionStream = new DeflateStream(streamCompressed, CompressionMode.Decompress))
+                using (MemoryStream streamDecompressed = new MemoryStream())
                 {
-                    decompressionStream.CopyTo(streamDecompressed);
-                }
+                    using (DeflateStream decompressionStream = new DeflateStream(streamCompressed, CompressionMode.Decompress))
+                    {
+                        decompressionStream.CopyTo(streamDecompressed);
+                    }
 
-                return streamDecompressed.ToArray();
+                    return streamDecompressed.ToArray();
+                }
             }
         }
     }
