@@ -1,5 +1,5 @@
 # Xyz Network Message Protocol (TCP/IP)
-Xyz library is currently only available for C#. All messages are automatically compressed with Deflate before sending and decompressed when received.
+Xyz library is currently only available for C#. All messages are automatically compressed with Deflate before sending and decompressed upon receiving.
 
 ### Server example
 ```csharp
