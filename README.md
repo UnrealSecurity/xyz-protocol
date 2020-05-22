@@ -1,4 +1,4 @@
-# Xyz Protocol
+# Xyz Protocol (tcp/ip)
 
 ## C#
 
