@@ -1,7 +1,5 @@
 # Xyz Network Message Protocol (TCP/IP)
 
-## C#
-
 ### Server example
 ```csharp
 server.OnConnect = (XyzClient client) =>
