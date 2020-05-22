@@ -1,7 +1,7 @@
 # xyz-protocol
 Xyz Protocol (TCP/IP)
 
-# Server example
+### Server example
 ```csharp
 server.OnConnect = (XyzSession session) =>
 {
@@ -16,7 +16,7 @@ server.OnConnect = (XyzSession session) =>
 };
 ```
 
-# Client example
+### Client example
 ```csharp
 client.OnConnect = (session) => {
     Console.WriteLine("Client connected to server");
