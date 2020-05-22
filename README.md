@@ -1,5 +1,4 @@
-# xyz-protocol
-Xyz Protocol (TCP/IP)
+# Xyz Protocol
 
 ### Server example
 ```csharp
