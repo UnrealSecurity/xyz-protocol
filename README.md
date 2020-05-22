@@ -2,6 +2,8 @@
 
 ### Server example
 ```csharp
+XyzServer server = new XyzServer(1234);
+
 server.OnConnect = (XyzClient client) =>
 {
     Console.WriteLine("[server] Client connected to us");
@@ -20,6 +22,8 @@ server.OnConnect = (XyzClient client) =>
 
 ### Client example
 ```csharp
+XyzClient client = new XyzClient();
+
 client.OnConnect = () => {
     Console.WriteLine("[client] Client connected to server");
 };
