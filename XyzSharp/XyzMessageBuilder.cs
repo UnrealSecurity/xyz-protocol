@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Text;
 using System.IO;
@@ -50,6 +50,18 @@ namespace XyzSharp
         public XyzMessageBuilder Add(string message, int type = 0)
         {
             Add(Encoding.UTF8.GetBytes(message), type);
+            return this;
+        }
+
+        public XyzMessageBuilder Add(long number, int type = 0)
+        {
+            Add(BitConverter.GetBytes(number), type);
+            return this;
+        }
+
+        public XyzMessageBuilder Add(int number, int type = 0)
+        {
+            Add(BitConverter.GetBytes(number), type);
             return this;
         }
 
