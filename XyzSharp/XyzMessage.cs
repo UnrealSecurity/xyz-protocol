@@ -32,7 +32,7 @@ namespace XyzSharp
             {
                 int[] list = new int[this.data.Length/4];
                 int j = 0;
-                for (int i = 0; i < data.Length; i++)
+                for (int i = 0; i < list.Length; i++)
                 {
                     list[i] = BitConverter.ToInt32(this.data, j);
                     j += 4;
@@ -47,7 +47,7 @@ namespace XyzSharp
             {
                 long[] list = new long[this.data.Length / 8];
                 int j = 0;
-                for (int i = 0; i < data.Length; i++)
+                for (int i = 0; i < list.Length; i++)
                 {
                     list[i] = BitConverter.ToInt64(this.data, j);
                     j += 8;
