@@ -70,5 +70,19 @@ namespace XyzSharp
             Add(message.Bytes, message.Type);
             return this;
         }
+
+        public XyzMessageBuilder Add(bool[] values, int type = 0)
+        {
+            byte[] bytes = new byte[values.Length];
+            for (int i=0; i<bytes.Length; i++)
+            {
+                if (values[i])
+                {
+                    bytes[i] = (byte)1;
+                }
+            }
+            Add(bytes, type);
+            return this;
+        }
     }
 }
