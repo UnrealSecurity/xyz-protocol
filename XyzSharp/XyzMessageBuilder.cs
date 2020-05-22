@@ -84,5 +84,28 @@ namespace XyzSharp
             Add(bytes, type);
             return this;
         }
+
+        public XyzMessageBuilder Add(int[] values, int type = 0)
+        {
+            MemoryStream ms = new MemoryStream();
+            foreach (int value in values) {
+                byte[] bytes = BitConverter.GetBytes(value);
+                ms.Write(bytes, 0, bytes.Length);
+            }
+            Add(ms.ToArray(), type);
+            return this;
+        }
+
+        public XyzMessageBuilder Add(long[] values, int type = 0)
+        {
+            MemoryStream ms = new MemoryStream();
+            foreach (long value in values)
+            {
+                byte[] bytes = BitConverter.GetBytes(value);
+                ms.Write(bytes, 0, bytes.Length);
+            }
+            Add(ms.ToArray(), type);
+            return this;
+        }
     }
 }
