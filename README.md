@@ -37,6 +37,6 @@ client.OnMessage = (byte[] data, int type) =>
 
 if (client.Connect("127.0.0.1", 1234))
 {
-    client.SendSync("Hello from client!", 1);
+    client.Send("Hello from client!", 1);
 }
 ```
