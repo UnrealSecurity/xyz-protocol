@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Text;
 using System.IO;
@@ -18,6 +18,13 @@ namespace XyzSharp
         public XyzServer(int port)
         {
             listener = new TcpListener(IPAddress.Any, port);
+            listener.Start();
+            listener.BeginAcceptTcpClient(Connection, listener);
+        }
+
+        public XyzServer(IPAddress address, int port)
+        {
+            listener = new TcpListener(address, port);
             listener.Start();
             listener.BeginAcceptTcpClient(Connection, listener);
         }
