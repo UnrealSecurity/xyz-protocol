@@ -9,8 +9,9 @@ class XyzServer
 {
     TcpListener listener;
 
-    private Action<XyzSession> on_Connect = null;
-    public Action<XyzSession> OnConnect { get { return on_Connect; } set { on_Connect = value; } }
+    private Action<XyzClient> on_Connect = null;
+    public Action<XyzClient> OnConnect { get { return on_Connect; } set { on_Connect = value; } }
+
 
     public XyzServer(int port)
     {
@@ -21,10 +22,10 @@ class XyzServer
 
     private void Connection(IAsyncResult ar)
     {
-        TcpClient client = this.listener.EndAcceptTcpClient(ar);
+        TcpClient _client = this.listener.EndAcceptTcpClient(ar);
         this.listener.BeginAcceptTcpClient(Connection, this.listener);
-        XyzSession session = new XyzSession(client);
+        XyzClient client = new XyzClient(_client);
 
-        this.on_Connect?.Invoke(session);
+        this.on_Connect?.Invoke(client);
     }
 }
