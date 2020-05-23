@@ -31,11 +31,17 @@ namespace XyzSharp
 
         private void Connection(IAsyncResult ar)
         {
-            TcpClient _client = this.listener.EndAcceptTcpClient(ar);
-            this.listener.BeginAcceptTcpClient(Connection, this.listener);
-            XyzClient client = new XyzClient(_client);
+            try
+            {
+                TcpClient _client = this.listener.EndAcceptTcpClient(ar);
+                this.listener.BeginAcceptTcpClient(Connection, this.listener);
+                XyzClient client = new XyzClient(_client);
 
-            this.on_Connect?.Invoke(client);
+                this.on_Connect?.Invoke(client);
+            }
+            catch (Exception)
+            {
+            }
         }
     }
 }
