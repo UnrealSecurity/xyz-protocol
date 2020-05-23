@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Text;
+using System.IO;
 
 namespace XyzSharp
 {
@@ -58,7 +59,61 @@ namespace XyzSharp
 
         public XyzMessage(byte[] message, int type = 0)
         {
-            data = message;
+            this.data = message;
+            this.type = type;
+        }
+
+        public XyzMessage(bool[] message, int type = 0)
+        {
+            MemoryStream ms = new MemoryStream();
+            foreach (bool value in message)
+            {
+                ms.Write(new byte[] { (byte)(value ? 1 : 0) }, 0, 1);
+            }
+            this.data = ms.ToArray();
+            this.type = type;
+        }
+
+        public XyzMessage(int message, int type = 0)
+        {
+            this.data = BitConverter.GetBytes(message);
+            this.type = type;
+        }
+
+        public XyzMessage(long message, int type = 0)
+        {
+            this.data = BitConverter.GetBytes(message);
+            this.type = type;
+        }
+
+        public XyzMessage(string message, int type = 0)
+        {
+            this.data = Encoding.UTF8.GetBytes(message);
+            this.type = type;
+        }
+
+        public XyzMessage(int[] message, int type = 0)
+        {
+            MemoryStream ms = new MemoryStream();
+            foreach (int value in message)
+            {
+                byte[] bytes = BitConverter.GetBytes(value);
+                ms.Write(bytes, 0, bytes.Length);
+            }
+            this.data = ms.ToArray();
+            this.type = type;
+        }
+
+        public XyzMessage(long[] message, int type = 0)
+        {
+            MemoryStream ms = new MemoryStream();
+            foreach (long value in message)
+            {
+                byte[] bytes = BitConverter.GetBytes(value);
+                ms.Write(bytes, 0, bytes.Length);
+            }
+            this.data = ms.ToArray();
+            this.type = type;
         }
     }
 }
