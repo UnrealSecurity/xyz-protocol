@@ -8,6 +8,8 @@ namespace XyzSharp
 {
     class XyzUtils
     {
+        public static Random random = new Random();
+
         public static byte[] Deflate(byte[] bytes)
         {
             using (MemoryStream streamUncompressed = new MemoryStream(bytes))
