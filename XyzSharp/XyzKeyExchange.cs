@@ -10,7 +10,7 @@ namespace XyzSharp
 
         public XyzKeyExchange()
         {
-            this.p = 23;
+            this.p = 59;
             this.g = 5;
         }
 
