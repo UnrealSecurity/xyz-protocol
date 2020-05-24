@@ -83,19 +83,6 @@ namespace XyzSharp
             return decrypted;
         }
 
-        public static string MD5(string input)
-        {
-            MD5 md5 = System.Security.Cryptography.MD5.Create();
-            byte[] inputBytes = Encoding.ASCII.GetBytes(input);
-            byte[] hash = md5.ComputeHash(inputBytes);
-            StringBuilder sb = new StringBuilder();
-            for (int i = 0; i < hash.Length; i++)
-            {
-                sb.Append(hash[i].ToString("x2"));
-            }
-            return sb.ToString().ToLower();
-        }
-
         public static string MD5(byte[] input)
         {
             MD5 md5 = System.Security.Cryptography.MD5.Create();
@@ -109,17 +96,9 @@ namespace XyzSharp
             return sb.ToString().ToLower();
         }
 
-        public static string SHA256(string input)
+        public static string MD5(string input)
         {
-            SHA256 sha256 = System.Security.Cryptography.SHA256.Create();
-            byte[] inputBytes = Encoding.ASCII.GetBytes(input);
-            byte[] hash = sha256.ComputeHash(inputBytes);
-            StringBuilder sb = new StringBuilder();
-            for (int i = 0; i < hash.Length; i++)
-            {
-                sb.Append(hash[i].ToString("x2"));
-            }
-            return sb.ToString().ToLower();
+            return MD5(Encoding.UTF8.GetBytes(input));
         }
 
         public static string SHA256(byte[] input)
@@ -133,6 +112,11 @@ namespace XyzSharp
                 sb.Append(hash[i].ToString("x2"));
             }
             return sb.ToString().ToLower();
+        }
+
+        public static string SHA256(string input)
+        {
+            return SHA256(Encoding.UTF8.GetBytes(input));
         }
     }
 }
