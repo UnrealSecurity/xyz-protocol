@@ -1,7 +1,7 @@
 # Xyz Network Message Protocol
 Xyz library is currently only available for C#. All messages are automatically compressed with Deflate before sending and decompressed upon receiving.
 
-# ECDiffieHellmanCng not found? (.NET core related issue?)
+#### ECDiffieHellmanCng not found? (.NET core related issue?)
 ```md
 Install-Package System.Security.Cryptography.Cng -Version 4.7.0
 ```
