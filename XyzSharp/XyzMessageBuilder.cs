@@ -53,6 +53,12 @@ namespace XyzSharp
             return this;
         }
 
+        public XyzMessageBuilder Add(string[] strings, int type = 0)
+        {
+            Add(Encoding.UTF8.GetBytes(String.Join("\0", strings)), type);
+            return this;
+        }
+
         public XyzMessageBuilder Add(long number, int type = 0)
         {
             Add(BitConverter.GetBytes(number), type);
