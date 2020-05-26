@@ -131,6 +131,21 @@ namespace XyzSharp
             return false;
         }
 
+        public bool Connected()
+        {
+            bool a = this.client.Client.Poll(1000, SelectMode.SelectRead);
+            bool b = this.client.Client.Available == 0;
+
+            if (a && b)
+            {
+                return false;
+            }
+            else
+            {
+                return true;
+            }
+        }
+
         public void Send(byte[] data, int type = 0)
         {
             try
