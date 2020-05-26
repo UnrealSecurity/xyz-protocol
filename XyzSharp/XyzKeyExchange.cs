@@ -1,41 +1,25 @@
-﻿using System.Numerics;
+﻿//using System.Numerics;
+using System.Security.Cryptography;
 
 namespace XyzSharp
 {
     class XyzKeyExchange
     {
-        int p = 0, g = 0;
-        byte[] private_key = null;
+        byte[] public_key = null;
         byte[] remote_public_key = null;
+        ECDiffieHellmanCng ecdh;
 
         public XyzKeyExchange()
         {
-            this.p = 59;
-            this.g = 5;
-        }
-
-        public XyzKeyExchange(int p, int g)
-        {
-            this.p = p;
-            this.g = g;
-        }
-
-        public void GeneratePrivateKey(int length = 128)
-        {
-            this.private_key = new byte[length];
-            XyzUtils.random.NextBytes(this.private_key);
+            this.ecdh = new ECDiffieHellmanCng();
+            this.ecdh.KeyDerivationFunction = ECDiffieHellmanKeyDerivationFunction.Hash;
+            this.ecdh.HashAlgorithm = CngAlgorithm.Sha256;
+            this.public_key = this.ecdh.PublicKey.ToByteArray();
         }
 
         public byte[] GetLocalPublicKey()
         {
-            byte[] public_key = new byte[this.private_key.Length];
-
-            for (int i = 0; i < this.private_key.Length; i++)
-            {
-                public_key[i] = (byte)(int)BigInteger.ModPow(this.g, this.private_key[i], this.p);
-            }
-
-            return public_key;
+            return this.public_key;
         }
 
         public void SetRemotePublicKey(byte[] remote_public_key)
@@ -45,14 +29,7 @@ namespace XyzSharp
 
         public byte[] GetSharedSecretKey()
         {
-            byte[] shared_key = new byte[this.private_key.Length];
-
-            for (int i = 0; i < this.private_key.Length; i++)
-            {
-                shared_key[i] = (byte)(int)BigInteger.ModPow(this.remote_public_key[i], this.private_key[i], this.p);
-            }
-
-            return shared_key;
+            return this.ecdh.DeriveKeyMaterial(CngKey.Import(remote_public_key, CngKeyBlobFormat.EccPublicBlob));
         }
     }
 }
