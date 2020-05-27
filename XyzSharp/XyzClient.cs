@@ -25,7 +25,6 @@ namespace XyzSharp
         int length = 0;
         int type = 0;
 
-
         public TcpClient Client { get { return this.client; } }
 
         private Action on_Connect = null;
@@ -52,6 +51,10 @@ namespace XyzSharp
         {
             this.client = client;
             this.stream = client.GetStream();
+        }
+
+        public void Read()
+        {
             this.stream.BeginRead(this.buffer, 0, 4, DataReceived, this.client);
         }
 
