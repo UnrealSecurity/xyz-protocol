@@ -128,7 +128,7 @@ class XyzMessageBuilder:
     
     def compileMessages(self, msgid: int=0):
         '''
-        Compiles all the messages to a big one.
+        Compiles all the messages into one
         Returns a XyzMessage object.
 
         Parameters:
