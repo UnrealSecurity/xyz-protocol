@@ -125,3 +125,14 @@ class XyzMessageBuilder:
         one packet.
         '''
         return XyzMessageDecoder(self.get()).decode()
+    
+    def compileMessages(self, msgid: int=0):
+        '''
+        Compiles all the messages to a big one.
+        Returns a XyzMessage object.
+
+        Parameters:
+            msgid\t- Message ID of the packet
+        '''
+        
+        return XyzMessage(data=self.data, msgid=msgid)
