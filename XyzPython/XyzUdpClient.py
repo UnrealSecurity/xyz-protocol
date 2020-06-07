@@ -239,12 +239,16 @@ class XyzUdpClient:
             raise SendError("No message to send...")
         elif (data != None and msgid != None) and not 0 <= msgid <= 255:
             raise SendError("Invalid message ID")
-        if not (data == None and msgid == None):
+        if (data != None and msgid != None):
             messages = [XyzMessage(data=data, msgid=msgid)]
         elif type(messages) == XyzMessage:
             messages = [messages]
 
         for message in messages:
+            if message.msgid == None:
+                if not msgid:
+                    raise SendError("No message id specified.")
+                message.msgid = msgid
             msg = message.get()
             if len(msg) > 65536:
                 raise SendError("Max. UDP datagram size is 65536 bytes. Your packet currently has {} bytes.".format(len(msg)))

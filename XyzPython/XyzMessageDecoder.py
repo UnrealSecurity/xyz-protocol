@@ -30,7 +30,7 @@ class XyzMessageDecoder:
             size, dtype = struct.unpack("IB", pkthdr)
             if len(data) < size:
                 return messages
-            pktdata = XyzUtils.inflate(data[0:size])
+            pktdata = data[0:size]
             data = data[size:]
             messages.append(XyzMessage(pktdata, dtype))
         return messages

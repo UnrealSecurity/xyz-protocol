@@ -20,13 +20,19 @@ class XyzMessage:
     def __init__(self, data: bytes, msgid: int=0):
         self.data = data
         self.msgid = msgid
+    
+    def __str__(self):
+        return '<XyzMessage ID={} length={}>'.format(self.msgid, len(self.data))
 
-    def get(self):
+    def get(self, deflate: bool=True):
         '''
         Deflates and packs the packet data/id and returns bytes that can be sent
         as-is to the server/client.
+
+        Parameters:
+            deflate\t- whether the message should be deflated or not (Boolean)
         '''
-        data = XyzUtils.deflate(self.data)
+        data = XyzUtils.deflate(self.data) if deflate else self.data
         return struct.pack("IB", len(data), self.msgid)+data
 
     def bools(self):
@@ -56,7 +62,7 @@ class XyzMessage:
         nints = len(self.data) // 4
         dtype = "{}i".format(nints)
         return list(struct.unpack(dtype, self.data))
-    
+
     def floats(self):
         '''
         Unpacks the data to a list of floats and returns this list.

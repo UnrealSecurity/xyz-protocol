@@ -3,7 +3,7 @@ from XyzPython.XyzMessageDecoder import XyzMessageDecoder
 from XyzPython.XyzUtils import XyzUtils
 import struct
 
-_inbetween = lambda _min, _max, _val: (_min <= _val <= _max) 
+_inbetween = lambda _min, _max, _val: (_min <= _val <= _max)
 
 def _getminmax(dtype):
     sz = struct.calcsize(dtype)
@@ -50,7 +50,6 @@ def _istnarr(array, dtype):
 
 
 def _XyzBuildMessage(data, dtype):
-    data = XyzUtils.deflate(data)
     return struct.pack("IB", len(data), dtype)+data
 
 class XyzMessageBuilder:
@@ -61,11 +60,11 @@ class XyzMessageBuilder:
     '''
     def __init__(self):
         self.data = b""
-    
-    def add(self, data: (XyzMessage, list, str, float, int, bytes, bool), dtype: int=0):
+
+    def add(self, data: (XyzMessage, list, str, float, int, bytes, bool), msgid: int=0):
         '''
         Adds a new packet to the XyzMessageBuilder.
-        
+
         Parameters:
             data\t - Data to pack into the packet. (
                 XyzMessage or
@@ -80,39 +79,39 @@ class XyzMessageBuilder:
                 Long or
                 Boolean or
                 Bytes)
-            
-            dtype\t - The Message ID of the packet. 0 if not set. (Int)
+
+            msgid\t - The Message ID of the packet. 0 if not set. (Int)
         '''
         if type(data) == XyzMessage:
             self.data += data.get()
         elif type(data) == bytes:
-            self.data += _XyzBuildMessage(data, dtype)
+            self.data += _XyzBuildMessage(data, msgid)
         elif _isstrarr(data):
-            self.data += _XyzBuildMessage(b"\x00".join(string.encode("utf8") for string in data), dtype)
+            self.data += _XyzBuildMessage(b"\x00".join(string.encode("utf8") for string in data), msgid)
         elif _istnarr(data, "f"):
-            self.data += _XyzBuildMessage(struct.pack("{}f".format(len(data)), *data), dtype)
+            self.data += _XyzBuildMessage(struct.pack("{}f".format(len(data)), *data), msgid)
         elif _istnarr(data, "i"):
-            self.data += _XyzBuildMessage(struct.pack("{}i".format(len(data)), *data), dtype)
+            self.data += _XyzBuildMessage(struct.pack("{}i".format(len(data)), *data), msgid)
         elif _istnarr(data, "q"):
-            self.data += _XyzBuildMessage(struct.pack("{}q".format(len(data)), *data), dtype)
+            self.data += _XyzBuildMessage(struct.pack("{}q".format(len(data)), *data), msgid)
         elif _isbarr(data):
-            self.data += _XyzBuildMessage(struct.pack("{}?".format(len(data)), *data), dtype)
+            self.data += _XyzBuildMessage(struct.pack("{}?".format(len(data)), *data), msgid)
         elif type(data) == str:
-            self.data += _XyzBuildMessage(data.encode("utf8"), dtype)
+            self.data += _XyzBuildMessage(data.encode("utf8"), msgid)
         elif type(data) == float:
-            self.data += _XyzBuildMessage(struct.pack("f", data), dtype)
+            self.data += _XyzBuildMessage(struct.pack("f", data), msgid)
         elif type(data) == int:
             if _inbetween(*_getminmax("i"), data):
-                self.data += _XyzBuildMessage(struct.pack("i", data), dtype)
+                self.data += _XyzBuildMessage(struct.pack("i", data), msgid)
             elif _inbetween(*_getminmax("q"), number):
-                self.data += _XyzBuildMessage(struct.pack("q", data), dtype)
+                self.data += _XyzBuildMessage(struct.pack("q", data), msgid)
             else:
                 raise ValueError("Number type not supported.")
         elif type(data) == bool:
-            self.data += _XyzBuildMessage(b"\x01" if data else b"\x00", dtype)
+            self.data += _XyzBuildMessage(b"\x01" if data else b"\x00", msgid)
         else:
             raise ValueError("Data type not supported.")
-    
+
     def get(self):
         '''
         Returns the data of all the packets.
@@ -125,14 +124,19 @@ class XyzMessageBuilder:
         one packet.
         '''
         return XyzMessageDecoder(self.get()).decode()
-    
-    def compileMessages(self, msgid: int=0):
+
+    def compileMessages(self, msgid: int=None):
         '''
-        Compiles all the messages into one
+        Compiles all the messages to a big one.
         Returns a XyzMessage object.
 
         Parameters:
             msgid\t- Message ID of the packet
         '''
-        
-        return XyzMessage(data=self.data, msgid=msgid)
+
+        messages = XyzMessageDecoder(self.get()).decode()
+        data = b"".join(message.get(deflate=False) for message in messages)
+
+        msg = XyzMessage(data=data, msgid=msgid)
+
+        return XyzMessage(data=data, msgid=msgid)

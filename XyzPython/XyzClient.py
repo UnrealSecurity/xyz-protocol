@@ -101,7 +101,7 @@ class XyzClient:
 
         The object's onMessage method, which you can override, is being called
         whenever the client receives a packet from the server.
-        The XyzClient object, 
+        The XyzClient object,
 
         This method will raise XyzPython.XyzUtils.NoAddressError if you did not
         supply the client object with a host and port argument.
@@ -112,10 +112,10 @@ class XyzClient:
         '''
         if not (self.address[0] and self.address[1]) and not (host and port):
             raise NoAddressError("No Server Address supplied.")
-        
+
         if (host and port):
             self.address = (host, port)
-        
+
         self._client.connect(self.address)
         if not self._sclient:
             self._client.settimeout(2)
@@ -125,7 +125,7 @@ class XyzClient:
         self._listener.start()
         self.connected = True
         self.onConnect(self)
-    
+
     def disconnect(self, _server=None):
         '''
         Disconnects the client from the connected server. In case no connection is
@@ -159,10 +159,14 @@ class XyzClient:
             raise SendError("No message to send...")
         elif (data != None and msgid != None) and not 0 <= msgid <= 255:
             raise SendError("Invalid message ID")
-        if not (data == None and msgid == None):
+        if (data != None and msgid != None):
             messages = [XyzMessage(data=data, msgid=msgid)]
         elif type(messages) == XyzMessage:
             messages = [messages]
 
         for message in messages:
+            if message.msgid == None:
+                if not msgid:
+                    raise SendError("No message id specified.")
+                message.msgid = msgid
             self._client.send(message.get())
