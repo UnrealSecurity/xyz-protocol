@@ -1,6 +1,5 @@
 ## Installation
-Copy XyzPython to your project's directory and install all the dependencies 
-listed in file "requirements.txt" using command like
+Copy XyzPython to your project's directory and install all required modules listed in file called requirements.txt
 ```bash
 sudo pip install -r requirements.txt
 ```
