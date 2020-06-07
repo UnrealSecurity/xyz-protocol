@@ -4,6 +4,22 @@ Copy XyzPython to your project's directory and install all required modules list
 sudo pip install -r requirements.txt
 ```
 
+### Server example
+```python
+from XyzPython.XyzServer import XyzServer
+
+def onMessage(server, client, message, messageid):
+    client.send(data=message, msgid=messageid)
+
+def onConnect(server, client):
+    client.onMessage = onMessage
+    print('Client connected!')
+
+server = XyzServer(port=12345)
+server.onConnect = onConnect
+server.bind()
+```
+
 ### Client example
 ```python
 from XyzPython.XyzClient import XyzClient
