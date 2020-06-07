@@ -42,8 +42,7 @@ def onConnect(client):
 def onMessage(client, data, msgid):
     # echo server sent our message back to us
     messages = XyzMessageDecoder(data).decode()
-    print(messages[1].strings())
-    pass
+    print(messages[1].strings()) // ["Hello", "world!"]
 
 client.onConnect = onConnect
 client.onMessage = onMessage
