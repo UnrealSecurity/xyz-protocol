@@ -5,4 +5,4 @@ Xyz library comes with all the things needed to establish a secure connection be
 
 ## Special thanks to
 #### [Format_HDD](https://github.com/FormatHDD) for XyzPython
-#### [MinusGix](https://github.com/MinusGix) for XyzCpp (will be soon added to this repo from [here](https://github.com/MinusGix/XyzCpp))
+#### [MinusGix](https://github.com/MinusGix) for XyzCpp
