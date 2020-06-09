@@ -21,6 +21,9 @@ class XyzMessage:
         self.data = data
         self.msgid = msgid
     
+    def __repr__(self):
+        return '<XyzMessage ID={} length={}>'.format(self.msid, len(self.data))
+
     def __str__(self):
         return '<XyzMessage ID={} length={}>'.format(self.msgid, len(self.data))
 

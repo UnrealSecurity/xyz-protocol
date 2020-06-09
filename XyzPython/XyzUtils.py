@@ -36,14 +36,14 @@ class XyzUtils:
     def inflate(message):
         if type(message) != bytes:
             raise InflateError("Invalid message data type.")
-    
+
         try:
             _data = zlib.decompress(message, -15)
         except zlib.error:
             raise InflateError("Failed to inflate data.")
-        
+
         return _data
-    
+
     def _getAES(key):
         salt = bytes([0x44, 0x12, 0x08, 0x19, 0x4D, 0x51, 0x1B, 0x09])
         pdb = PBKDF2(key, salt, 2)
@@ -57,7 +57,7 @@ class XyzUtils:
 
         aes = XyzUtils._getAES(key)
         return aes.encrypt(_PKCS7P(message))
-    
+
     def decrypt(message, key):
         if type(message) != bytes:
             raise CryptError("Invalid message data type.")
@@ -71,7 +71,7 @@ class XyzUtils:
         if type(message) != bytes:
             raise HashError("Invalid message data type.")
         return hashlib.md5(message).hexdigest()
-    
+
     def sha256(message):
         if type(message) != bytes:
             raise HashError("Invalid message data type.")
