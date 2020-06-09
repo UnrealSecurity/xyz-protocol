@@ -116,7 +116,10 @@ class XyzClient:
         if (host and port):
             self.address = (host, port)
 
-        self._client.connect(self.address)
+        try:
+            self._client.connect(self.address)
+        except ConnectionRefusedError:
+            return False
         if not self._sclient:
             self._client.settimeout(2)
             self._listener = _XyzListener(self, self._client, self.onMessage, self.onDisconnect)
@@ -125,6 +128,7 @@ class XyzClient:
         self._listener.start()
         self.connected = True
         self.onConnect(self)
+        return True
 
     def disconnect(self, _server=None):
         '''
