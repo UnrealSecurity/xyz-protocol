@@ -9,7 +9,7 @@ Xyz library comes with all the things needed to establish a secure connection be
 XyzKeyExchange alice = new XyzKeyExchange();
 XyzKeyExchange bob = new XyzKeyExchange();
 
-/* Alice & Bob exchanges their public keys */
+/* Alice & Bob exchange their public keys */
 alice.SetRemotePublicKey( bob.GetLocalPublicKey() );
 bob.SetRemotePublicKey( alice.GetLocalPublicKey() );
 
