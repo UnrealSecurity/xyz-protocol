@@ -13,7 +13,7 @@ XyzKeyExchange bob = new XyzKeyExchange();
 alice.SetRemotePublicKey( bob.GetLocalPublicKey() );
 bob.SetRemotePublicKey( alice.GetLocalPublicKey() );
 
-/* Alice & Bob now share a same secret keys that can 
+/* Alice & Bob now share the same secret keys that can 
    be used to encrypt messages */
 byte[] aliceSharedSecret = alice.GetSharedSecretKey();
 byte[] bobSharedSecret = bob.GetSharedSecretKey();
