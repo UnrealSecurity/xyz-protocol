@@ -87,16 +87,42 @@ namespace XyzCpp {
 				}
 			}
 
-			// had to define custom back_insertor (pretty simple), since iostreams don't convert char/unsigned char into std::byte..
-			struct byte_insert_iterator : public std::iterator<std::output_iterator_tag, void, void, void, void> {
+			struct byte_insert_iterator {
 				std::vector<std::byte>* place;
 
+				using iterator_category = std::output_iterator_tag;
+				using difference_type = void;
+				using value_type = void;
+				using pointer = void;
+				using reference = void;
+
 				explicit byte_insert_iterator (std::vector<std::byte>& t_place) : place(std::addressof(t_place)) {}
+
+				byte_insert_iterator& operator++ () {
+					return *this;
+				}
+
+				byte_insert_iterator operator++ (int) {
+					return *this;
+				}
+
+				bool operator== (byte_insert_iterator other) const {
+					return place == other.place;
+				}
+
+				bool operator!= (byte_insert_iterator other) const {
+					return place != other.place;
+				}
+
+				byte_insert_iterator& operator* () {
+					return *this;
+				}
 
 				byte_insert_iterator& operator= (unsigned char& value) {
 					place->push_back(std::byte(value));
 					return *this;
 				}
+
 				byte_insert_iterator& operator= (unsigned char&& value) {
 					place->push_back(std::byte(value));
 					return *this;
@@ -109,18 +135,6 @@ namespace XyzCpp {
 
 				byte_insert_iterator& operator= (std::byte&& value) {
 					place->push_back(value);
-					return *this;
-				}
-
-				byte_insert_iterator& operator* () {
-					return *this;
-				}
-
-				byte_insert_iterator& operator++ () {
-					return *this;
-				}
-
-				byte_insert_iterator& operator++ (int) {
 					return *this;
 				}
 			};
