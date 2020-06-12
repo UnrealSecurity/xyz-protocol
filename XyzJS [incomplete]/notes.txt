@@ -1,3 +1,0 @@
-Elliptic Curve Cryptography
-https://github.com/indutny/elliptic
-
