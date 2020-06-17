@@ -6,7 +6,7 @@ using System.IO;
 
 namespace XyzSharp
 {
-    class XyzUdpClient
+    public class XyzUdpClient
     {
         UdpClient client;
         public UdpClient Client { get { return this.client; } }

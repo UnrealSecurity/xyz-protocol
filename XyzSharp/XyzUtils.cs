@@ -7,7 +7,7 @@ using System.Security.Cryptography;
 
 namespace XyzSharp
 {
-    class XyzUtils
+    public class XyzUtils
     {
         public static Random random = new Random();
 

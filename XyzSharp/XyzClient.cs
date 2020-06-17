@@ -7,7 +7,7 @@ using System.Net.Sockets;
 
 namespace XyzSharp
 {
-    class XyzClient
+    public class XyzClient
     {
         private TcpClient client;
         private bool disconnected = false;

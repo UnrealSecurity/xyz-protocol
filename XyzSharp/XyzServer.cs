@@ -7,7 +7,7 @@ using System.Net.Sockets;
 
 namespace XyzSharp
 {
-    class XyzServer
+    public class XyzServer
     {
         TcpListener listener;
 

@@ -4,7 +4,7 @@ using System.Text;
 
 namespace XyzSharp
 {
-    class XyzProxyTunnel
+    public class XyzProxyTunnel
     {
         private XyzServer server = null;
 

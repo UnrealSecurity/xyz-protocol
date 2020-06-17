@@ -2,7 +2,7 @@
 
 namespace XyzSharp
 {
-    class XyzKeyExchange
+    public class XyzKeyExchange
     {
         byte[] public_key = null;
         byte[] remote_public_key = null;
