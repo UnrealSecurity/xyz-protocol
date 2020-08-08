@@ -39,16 +39,19 @@ namespace XyzSharp
         public XyzClient()
         {
             this.client = new TcpClient();
+            this.client.NoDelay = true;
         }
 
         public XyzClient(string host, int port)
         {
             this.client = new TcpClient();
+            this.client.NoDelay = true;
             this.Connect(host, port);
         }
 
         public XyzClient(TcpClient client)
         {
+            client.NoDelay = true;
             this.client = client;
             this.stream = client.GetStream();
         }
