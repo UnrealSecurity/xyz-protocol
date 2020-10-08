@@ -4,6 +4,7 @@ using System.Text;
 using System.IO;
 using System.Net;
 using System.Net.Sockets;
+using System.Threading;
 
 namespace XyzSharp
 {
@@ -12,18 +13,6 @@ namespace XyzSharp
         private TcpClient client;
         private bool disconnected = false;
         NetworkStream stream;
-        byte[] buffer = new byte[4];
-
-        private enum State
-        {
-            Length,
-            Type,
-            Message,
-        }
-
-        State state = State.Length;
-        int length = 0;
-        int type = 0;
 
         public TcpClient Client { get { return this.client; } }
 
@@ -39,63 +28,51 @@ namespace XyzSharp
         public XyzClient()
         {
             this.client = new TcpClient();
-            this.client.NoDelay = true;
         }
 
         public XyzClient(string host, int port)
         {
             this.client = new TcpClient();
-            this.client.NoDelay = true;
             this.Connect(host, port);
         }
 
         public XyzClient(TcpClient client)
         {
-            client.NoDelay = true;
             this.client = client;
             this.stream = client.GetStream();
         }
 
         public void Read()
         {
-            this.stream.BeginRead(this.buffer, 0, 4, DataReceived, this.client);
+            new Thread(Receiver).Start();
         }
 
-        private void DataReceived(IAsyncResult ar)
+        public byte[] ReadBytes(int length)
         {
-            try
+            byte[] bytes = new byte[length];
+            int received = 0;
+
+            while (received < length)
             {
-                int read = this.stream.EndRead(ar);
-
-                if (this.state == State.Length)
-                {
-                    this.state = State.Type;
-
-                    this.length = BitConverter.ToInt32(this.buffer, 0);
-                    this.buffer = new byte[1];
-                    this.stream.BeginRead(this.buffer, 0, 1, DataReceived, this.client);
-                }
-                else if (this.state == State.Type)
-                {
-                    this.state = State.Message;
-                    this.type = (int)this.buffer[0];
-                    this.buffer = new byte[this.length];
-                    this.stream.BeginRead(this.buffer, 0, this.buffer.Length, DataReceived, this.client);
-                }
-                else if (this.state == State.Message)
-                {
-                    this.state = State.Length;
-
-                    byte[] message = XyzUtils.Inflate(buffer);
-                    this.OnMessage?.Invoke(message, this.type);
-                    this.buffer = new byte[4];
-                    this.stream.BeginRead(this.buffer, 0, 4, DataReceived, this.client);
-                }
+                int read = this.stream.Read(bytes, received, length - received);
+                received += read;
             }
-            catch (Exception)
+
+            return bytes;
+        }
+
+        public void Receiver()
+        {
+            while (client.Connected)
             {
-                this.state = State.Length;
-                this.Disconnect(true);
+                byte[] header = ReadBytes(5);
+
+                int length = BitConverter.ToInt32(header, 0);
+                int type = header[4];
+
+                byte[] message_bytes = ReadBytes(length);
+
+                this.OnMessage?.Invoke(XyzUtils.Inflate(message_bytes), type);
             }
         }
 
@@ -122,12 +99,11 @@ namespace XyzSharp
             try
             {
                 this.client.Connect(host, port);
-
                 this.stream = client.GetStream();
-                this.stream.BeginRead(this.buffer, 0, 4, DataReceived, this.client);
+
+                new Thread(Receiver).Start();
 
                 this.OnConnect?.Invoke();
-
                 return true;
             }
             catch (Exception)
