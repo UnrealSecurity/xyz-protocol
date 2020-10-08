@@ -24,8 +24,6 @@ server.OnConnect = (XyzClient client) =>
         Console.WriteLine("[server received] " + type.ToString() + ": " + Encoding.UTF8.GetString(data));
         client.Send("Hello from server!", 2);
     };
-
-    client.Read();
 };
 ```
 
