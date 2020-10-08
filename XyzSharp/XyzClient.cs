@@ -63,16 +63,23 @@ namespace XyzSharp
 
         public void Receiver()
         {
-            while (client.Connected)
+            while (client.Connected && !disconnected)
             {
-                byte[] header = ReadBytes(5);
+                try
+                {
+                    byte[] header = ReadBytes(5);
 
-                int length = BitConverter.ToInt32(header, 0);
-                int type = header[4];
+                    int length = BitConverter.ToInt32(header, 0);
+                    int type = header[4];
 
-                byte[] message_bytes = ReadBytes(length);
+                    byte[] message_bytes = ReadBytes(length);
 
-                this.OnMessage?.Invoke(XyzUtils.Inflate(message_bytes), type);
+                    this.OnMessage?.Invoke(XyzUtils.Inflate(message_bytes), type);
+                }
+                catch (Exception)
+                {
+                    Disconnect(true);
+                }
             }
         }
 
