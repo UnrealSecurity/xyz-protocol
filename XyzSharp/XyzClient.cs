@@ -5,6 +5,7 @@ using System.IO;
 using System.Net;
 using System.Net.Sockets;
 using System.Threading;
+using System.Threading.Tasks;
 
 namespace XyzSharp
 {
@@ -42,45 +43,45 @@ namespace XyzSharp
             this.stream = client.GetStream();
         }
 
-        public void Read()
+        public async void Read()
         {
-            new Thread(Receiver).Start();
+            await Receiver();
         }
 
-        public byte[] ReadBytes(int length)
+        public async Task<byte[]> ReadBytes(int length)
         {
             byte[] bytes = new byte[length];
             int received = 0;
 
             while (received < length)
             {
-                int read = this.stream.Read(bytes, received, length - received);
+                int read = await this.stream.ReadAsync(bytes, received, length - received);
                 received += read;
             }
 
             return bytes;
         }
 
-        public void Receiver()
+        public async Task Receiver()
         {
-            while (client.Connected && !disconnected)
+            try
             {
-                try
-                {
-                    byte[] header = ReadBytes(5);
+                byte[] header = await ReadBytes(5);
 
-                    int length = BitConverter.ToInt32(header, 0);
-                    int type = header[4];
+                int length = BitConverter.ToInt32(header, 0);
+                int type = header[4];
 
-                    byte[] message_bytes = ReadBytes(length);
+                byte[] message_bytes = await ReadBytes(length);
 
-                    this.OnMessage?.Invoke(XyzUtils.Inflate(message_bytes), type);
-                }
-                catch (Exception)
-                {
-                    Disconnect(true);
-                }
+                this.OnMessage?.Invoke(XyzUtils.Inflate(message_bytes), type);
             }
+            catch (Exception)
+            {
+                Disconnect(true);
+            }
+
+            if (client.Connected && !disconnected)
+                await Receiver();
         }
 
         public void Disconnect(bool forced = false)
@@ -108,7 +109,7 @@ namespace XyzSharp
                 this.client.Connect(host, port);
                 this.stream = client.GetStream();
 
-                new Thread(Receiver).Start();
+                this.Read();
 
                 this.OnConnect?.Invoke();
                 return true;
@@ -166,39 +167,6 @@ namespace XyzSharp
         {
             byte[] payload = new XyzMessageBuilder().Add(message).ToArray();
             this.Send(payload, type);
-        }
-
-        public void SendSync(byte[] data, int type = 0)
-        {
-            try
-            {
-                byte[] payload = new XyzMessageBuilder().Add(XyzUtils.Deflate(data), type).ToArray();
-                this.stream.Write(payload, 0, payload.Length);
-            }
-            catch (Exception)
-            {
-            }
-        }
-
-        public void SendSync(string data, int type = 0)
-        {
-            this.SendSync(Encoding.UTF8.GetBytes(data), type);
-        }
-
-        public void SendSync(XyzMessage[] messages, int type = 0)
-        {
-            XyzMessageBuilder builder = new XyzMessageBuilder();
-            foreach (XyzMessage message in messages)
-            {
-                builder.Add(message);
-            }
-            this.SendSync(builder.ToArray(), type);
-        }
-
-        public void SendSync(XyzMessage message, int type = 0)
-        {
-            byte[] payload = new XyzMessageBuilder().Add(message).ToArray();
-            this.SendSync(payload, type);
         }
     }
 }
