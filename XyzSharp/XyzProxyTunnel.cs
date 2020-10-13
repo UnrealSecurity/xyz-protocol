@@ -34,6 +34,7 @@ namespace XyzSharp
             server.OnConnect = (XyzClient client) => {
                 this.on_Connect?.Invoke(client, Source.Client);
 
+                // backend
                 XyzClient backend = new XyzClient();
                 backend.OnConnect = ()=> {
                     this.on_Connect?.Invoke(backend, Source.Backend);
@@ -50,16 +51,20 @@ namespace XyzSharp
                 };
                 backend.Connect(forwardHost, forwardPort);
 
+                // frontend
                 client.OnDisconnect = () =>
                 {
                     backend.Disconnect();
                     this.on_Disconnect?.Invoke(client, Source.Client);
                 };
+
                 client.OnMessage = (byte[] bytes, int type) =>
                 {
                     backend.Send(bytes, type);
                     this.on_Message?.Invoke(client, bytes, type, Source.Client);
                 };
+
+                client.Read();
             };
         }
 

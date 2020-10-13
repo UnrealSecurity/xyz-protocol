@@ -41,8 +41,6 @@ namespace XyzSharp
         {
             this.client = client;
             this.stream = client.GetStream();
-
-            Read();
         }
 
         public async void Read()
