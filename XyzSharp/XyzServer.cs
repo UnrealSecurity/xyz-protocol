@@ -34,7 +34,6 @@ namespace XyzSharp
             try
             {
                 TcpClient _client = this.listener.EndAcceptTcpClient(ar);
-				_client.NoDelay = true;
                 this.listener.BeginAcceptTcpClient(Connection, this.listener);
                 XyzClient client = new XyzClient(_client);
                 this.on_Connect?.Invoke(client);
