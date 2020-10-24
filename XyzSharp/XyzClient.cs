@@ -48,7 +48,7 @@ namespace XyzSharp
             await Receiver();
         }
 
-        public async Task<byte[]> ReadBytes(int length)
+        private async Task<byte[]> ReadBytes(int length)
         {
             byte[] bytes = new byte[length];
             int received = 0;
@@ -62,7 +62,7 @@ namespace XyzSharp
             return bytes;
         }
 
-        public async Task Receiver()
+        private async Task Receiver()
         {
             try
             {
