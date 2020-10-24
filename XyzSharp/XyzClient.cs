@@ -48,7 +48,7 @@ namespace XyzSharp
             await Receiver();
         }
 
-        private async Task<byte[]> ReadBytes(int length)
+        public async Task<byte[]> ReadBytes(int length)
         {
             byte[] bytes = new byte[length];
             int received = 0;
@@ -62,7 +62,7 @@ namespace XyzSharp
             return bytes;
         }
 
-        private async Task Receiver()
+        public async Task Receiver()
         {
             try
             {
@@ -136,12 +136,12 @@ namespace XyzSharp
             }
         }
 
-        public void Send(byte[] data, int type = 0)
+        public async void Send(byte[] data, int type = 0)
         {
             try
             {
                 byte[] payload = new XyzMessageBuilder().Add(XyzUtils.Deflate(data), type).ToArray();
-                this.stream.BeginWrite(payload, 0, payload.Length, null, this.client);
+                await this.stream.WriteAsync(payload, 0, payload.Length);
             }
             catch (Exception)
             {
